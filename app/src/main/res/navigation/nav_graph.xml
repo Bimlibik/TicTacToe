@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/start_fragment">
+
+    <action
+        android:id="@+id/action_start_fragment"
+        app:destination="@id/start_fragment" />
+
+    <fragment
+        android:id="@+id/start_fragment"
+        android:name="com.foxy.tictactoe.StartFragment"
+        android:label="StartFragment" >
+        <action
+            android:id="@+id/action_start_fragment_to_field_fragment"
+            app:destination="@id/field_fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/field_fragment"
+        android:name="com.foxy.tictactoe.FieldFragment"
+        android:label="FieldFragment" />
+</navigation>
