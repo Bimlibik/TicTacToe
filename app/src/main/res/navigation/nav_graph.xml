@@ -10,7 +10,7 @@
 
     <fragment
         android:id="@+id/start_fragment"
-        android:name="com.foxy.tictactoe.StartFragment"
+        android:name="com.foxy.tictactoe.ui.StartFragment"
         android:label="StartFragment" >
         <action
             android:id="@+id/action_start_fragment_to_field_fragment"
@@ -18,6 +18,6 @@
     </fragment>
     <fragment
         android:id="@+id/field_fragment"
-        android:name="com.foxy.tictactoe.FieldFragment"
+        android:name="com.foxy.tictactoe.ui.FieldFragment"
         android:label="FieldFragment" />
 </navigation>

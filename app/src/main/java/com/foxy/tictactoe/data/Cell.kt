@@ -1,7 +1,9 @@
-package com.foxy.tictactoe
+package com.foxy.tictactoe.data
+
+import com.foxy.tictactoe.utils.Dot
 
 class Cell (
-    var dot: Dot =  Dot.EMPTY,
+    var dot: Dot = Dot.EMPTY,
     var left: Int = 0,
     var top: Int = 0,
     var right: Int = 0,

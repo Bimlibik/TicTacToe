@@ -30,7 +30,7 @@
             android:contentDescription="@string/content_description_replay"/>
     </LinearLayout>
 
-    <com.foxy.tictactoe.FieldView
+    <com.foxy.tictactoe.ui.FieldView
         android:id="@+id/field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,7 +1,8 @@
-package com.foxy.tictactoe
+package com.foxy.tictactoe.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.foxy.tictactoe.R
 
 class MainActivity : AppCompatActivity() {
 

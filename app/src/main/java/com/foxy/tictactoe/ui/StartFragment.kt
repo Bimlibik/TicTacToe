@@ -1,10 +1,11 @@
-package com.foxy.tictactoe
+package com.foxy.tictactoe.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.foxy.tictactoe.R
 import kotlinx.android.synthetic.main.fragment_start.*
 import moxy.MvpAppCompatFragment
 

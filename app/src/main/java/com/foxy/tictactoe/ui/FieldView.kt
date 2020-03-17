@@ -1,4 +1,4 @@
-package com.foxy.tictactoe
+package com.foxy.tictactoe.ui
 
 import android.content.Context
 import android.graphics.Canvas
@@ -8,6 +8,8 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import com.foxy.tictactoe.data.Cell
+import com.foxy.tictactoe.utils.Dot
 import kotlin.math.min
 
 class FieldView : View {
@@ -18,7 +20,7 @@ class FieldView : View {
 
     private val COUNT = 3
     private var currentCellIndex = Pair(0, 0)
-    private var field = Array(COUNT) {Array(COUNT) {Cell()} }
+    private var field = Array(COUNT) {Array(COUNT) { Cell() } }
     private val paint = Paint()
     private val dotPaint = Paint()
 
@@ -56,6 +58,11 @@ class FieldView : View {
             }
         }
         return true
+    }
+
+    fun changeDotInCell(x: Int, y: Int, dot: Dot) {
+        field[x][y].dot = dot
+        invalidate()
     }
 
     private fun checkCellStates(canvas: Canvas) {
@@ -121,8 +128,12 @@ class FieldView : View {
         val cellSize = width / COUNT
         for (y in 0 until COUNT) {
             for (x in 0 until COUNT) {
-                field[x][y] = Cell(left = x * cellSize, top = y * cellSize,
-                    right = (x + 1) * cellSize, bottom = (y + 1) * cellSize)
+                field[x][y].apply {
+                    left = x * cellSize
+                    top = y * cellSize
+                    right = (x + 1) * cellSize
+                    bottom = (y + 1) * cellSize
+                }
                 Log.i("TAG", "y = $y, x = $x, left = ${x*cellSize}, top = ${y*cellSize}, " +
                         "right = ${(x+1)*cellSize}, bottom = ${(y+1)*cellSize}")
             }
