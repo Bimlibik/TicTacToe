@@ -9,7 +9,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.foxy.tictactoe.data.Cell
-import com.foxy.tictactoe.utils.Dot
+import com.foxy.tictactoe.utils.FieldCallback
 import kotlin.math.min
 
 class FieldView : View {
@@ -19,22 +19,24 @@ class FieldView : View {
     constructor(ctx: Context, attrs: AttributeSet) : super(ctx, attrs)
 
     private val COUNT = 3
-    private var currentCellIndex = Pair(0, 0)
-    private var field = Array(COUNT) {Array(COUNT) { Cell() } }
-    private val paint = Paint()
+    private var dotInfo = mutableListOf<Cell>()
+    private lateinit var callback: FieldCallback
+    private val linePaint = Paint()
     private val dotPaint = Paint()
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        // устанавливает одинаковый размер всем сторонам view
+        // выбирает минимальную длину экрана (ширина / высота) и устанавливает ее как размер
+        // всех сторон view
+        Log.i("TAG", "onMeasure")
         val size = min(measuredHeight, measuredWidth)
         setMeasuredDimension(size, size)
+        callback.saveFieldSize(size)
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         initPaint()
-        initCell()
         drawVerticalLines(canvas)
         drawHorizontalLines(canvas)
         checkCellStates(canvas)
@@ -45,50 +47,45 @@ class FieldView : View {
 
         val x = event.x
         val y = event.y
-        when(event.action) {
+        when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                currentCellIndex = getCellIndex(x, y)
-                Log.i("TAG", "currentCellIndex = $currentCellIndex")
+                callback.saveCurrentCellIndex(x.toInt(), y.toInt())
             }
             MotionEvent.ACTION_UP -> {
-                val finalCellIndex = getCellIndex(x, y)
-                if (finalCellIndex == currentCellIndex) {
-                    Log.i("TAG", "finalCellIndex = $finalCellIndex")
-                }
+                callback.onCellClick(x.toInt(), y.toInt())
             }
         }
         return true
     }
 
-    fun changeDotInCell(x: Int, y: Int, dot: Dot) {
-        field[x][y].dot = dot
+    fun changeDotInCell(newDotInfo: MutableList<Cell>) {
+        dotInfo.clear()
+        dotInfo.addAll(newDotInfo)
         invalidate()
     }
 
+    fun setupFieldCallback(callback: FieldCallback) {
+        this.callback = callback
+    }
+
     private fun checkCellStates(canvas: Canvas) {
-        for ((x, cell) in field.withIndex()) {
-            for ((y, dot) in cell.withIndex()) {
-                if (dot.isEmpty) {
-                    continue
-                } else {
-                    drawDot(canvas, dot.dot, field[x][y])
-                }
-            }
+        for (cell in dotInfo) {
+            drawDot(canvas, cell)
         }
     }
 
-    private fun drawDot(canvas: Canvas, dot: Dot, cell: Cell) {
+    private fun drawDot(canvas: Canvas, cell: Cell) {
         val margin = (width / COUNT) / 4
         val startX = (cell.left + margin).toFloat()
         val startY = (cell.bottom - margin).toFloat()
-        canvas.drawText(dot.toString(), startX, startY, dotPaint)
+        canvas.drawText(cell.dot.toString(), startX, startY, dotPaint)
     }
 
     private fun drawVerticalLines(canvas: Canvas) {
         val cellWidth = (width / COUNT).toFloat()
         for (i in 1 until COUNT) {
             val x = i * cellWidth
-            canvas.drawLine(x, 0f, x, height.toFloat(), paint)
+            canvas.drawLine(x, 0f, x, height.toFloat(), linePaint)
         }
     }
 
@@ -96,21 +93,12 @@ class FieldView : View {
         val cellHeight = (height / COUNT).toFloat()
         for (i in 1 until COUNT) {
             val y = i * cellHeight
-            canvas.drawLine(0f, y, width.toFloat(), y, paint)
+            canvas.drawLine(0f, y, width.toFloat(), y, linePaint)
         }
-    }
-
-    private fun getCellIndex(x: Float, y: Float) : Pair<Int, Int> {
-        field.forEachIndexed {i, cells ->
-            for ((j, cell) in cells.withIndex()) {
-                if (cell.contains(x.toInt(), y.toInt())) return Pair(i, j)
-            }
-        }
-        return Pair(-1, -1)
     }
 
     private fun initPaint() {
-        paint.apply {
+        linePaint.apply {
             color = Color.BLACK
             isAntiAlias = true
             style = Paint.Style.STROKE
@@ -121,22 +109,6 @@ class FieldView : View {
             color = Color.BLACK
             isAntiAlias = true
             textSize = resources.displayMetrics.scaledDensity * 70
-        }
-    }
-
-    private fun initCell() {
-        val cellSize = width / COUNT
-        for (y in 0 until COUNT) {
-            for (x in 0 until COUNT) {
-                field[x][y].apply {
-                    left = x * cellSize
-                    top = y * cellSize
-                    right = (x + 1) * cellSize
-                    bottom = (y + 1) * cellSize
-                }
-                Log.i("TAG", "y = $y, x = $x, left = ${x*cellSize}, top = ${y*cellSize}, " +
-                        "right = ${(x+1)*cellSize}, bottom = ${(y+1)*cellSize}")
-            }
         }
     }
 }
