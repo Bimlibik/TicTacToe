@@ -37,4 +37,15 @@
         android:layout_gravity="center"
         android:layout_margin="48dp"/>
 
+    <TextView
+        android:id="@+id/tv_win_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="48dp"
+        android:text="@string/tv_win_info"
+        android:textSize="28sp"
+        android:textColor="@color/textColorDark"
+        android:visibility="gone"/>
+
 </FrameLayout>

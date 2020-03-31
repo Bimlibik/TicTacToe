@@ -10,6 +10,7 @@ import com.foxy.tictactoe.R
 import com.foxy.tictactoe.data.Cell
 import com.foxy.tictactoe.mvp.presenter.FieldPresenter
 import com.foxy.tictactoe.mvp.view.FieldView
+import com.foxy.tictactoe.utils.Dot
 import com.foxy.tictactoe.utils.FieldCallback
 import kotlinx.android.synthetic.main.fragment_field.*
 import moxy.MvpAppCompatFragment
@@ -30,18 +31,12 @@ class FieldFragment : MvpAppCompatFragment(), FieldView, FieldCallback {
         super.onViewCreated(view, savedInstanceState)
 
         field.setupFieldCallback(this)
-        btn_replay.setOnClickListener { replay() }
+        btn_replay.setOnClickListener { presenter.reset() }
         btn_exit.setOnClickListener { openStartFragment() }
-    }
-
-    override fun onCellClick(cellIndex: Pair<Int, Int>) {
-        // TODO: check step
-        Log.i("TAG", "cell index: $cellIndex")
     }
 
     override fun drawDot(newField: MutableList<Cell>) {
         field.changeDotInCell(newField)
-        // TODO: change dot in cell
     }
 
     override fun openStartFragment() {
@@ -49,18 +44,34 @@ class FieldFragment : MvpAppCompatFragment(), FieldView, FieldCallback {
         findNavController().navigate(action)
     }
 
-    override fun showWinner() {
-        // TODO: show button layout and textView with winner
+    override fun showWinner(centerX1: Float, centerY1: Float, centerX2: Float, centerY2: Float, dot: Dot) {
+        field.animateWin(centerX1, centerY1, centerX2, centerY2)
+        field.isEnabled = false
+        layout_btn.visibility = View.VISIBLE
+
+        tv_win_info.apply {
+            visibility = View.VISIBLE
+            text = getString(R.string.tv_win_info, dot.toString())
+        }
+    }
+
+    override fun showTie() {
+        layout_btn.visibility = View.VISIBLE
+        field.isEnabled = false
+        tv_win_info.apply {
+            visibility = View.VISIBLE
+            text = getString(R.string.tv_info)
+        }
     }
 
     override fun replay() {
-        // TODO: reset field
+        field.reset()
+        layout_btn.visibility = View.GONE
+        tv_win_info.visibility = View.GONE
     }
 
-
-    // Field callback
+    // Field callbacks
     override fun saveFieldSize(size: Int) {
-        Log.i("TAG", "field size = $size")
         presenter.setFieldSize(size)
     }
 

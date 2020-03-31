@@ -17,19 +17,22 @@ class FieldPresenter : MvpPresenter<FieldView>() {
     private var playerX = true
     private var currentCellIndex = Pair(0, 0)
     private var field = Array(cellCount) { Array(cellCount) { Cell() } }
-//    private lateinit var field: Array<Array<Cell>>
+
+    fun reset() {
+        field = Array(cellCount) { Array(cellCount) { Cell() } }
+        initField()
+        viewState.replay()
+    }
 
     fun checkFinalCellIndex(x: Int, y: Int) {
         val finalCellIndex = getCellIndex(x, y)
         if (finalCellIndex == currentCellIndex) {
             checkPlayerStep(finalCellIndex)
-            Log.i("TAG", "cell index: $finalCellIndex")
         }
     }
 
     fun saveCellIndex(x: Int, y: Int) {
         currentCellIndex = getCellIndex(x, y)
-        Log.i("TAG", "save current cell index, x = $x, y = $y, index = $currentCellIndex")
     }
 
     fun setFieldSize(size: Int) {
@@ -51,15 +54,25 @@ class FieldPresenter : MvpPresenter<FieldView>() {
     private fun checkWin(index: Pair<Int, Int>, dot: Dot) {
         val winInfo = gameManager.isWin(index, field, dot, cellCount)
         if (winInfo.first) {
-            Log.i("WIN", "winner is ${playerX}")
+            calculateCoordinatesForAnimation(winInfo.second)
             return
         }
 
         playerX = !playerX
 
         if (gameManager.isFieldFull(field)) {
+            viewState.showTie()
             Log.i("WIN", "game end with a tie")
         }
+    }
+
+    private fun calculateCoordinatesForAnimation(winCells: Array<Cell>) {
+        val halfCellSize = (size / cellCount) / 2
+        val centerX1 = (winCells.first().right - halfCellSize).toFloat()
+        val centerY1 = (winCells.first().bottom - halfCellSize).toFloat()
+        val centerX2 = (winCells.last().right - halfCellSize).toFloat()
+        val centerY2 = (winCells.last().bottom - halfCellSize).toFloat()
+        viewState.showWinner(centerX1, centerY1, centerX2, centerY2, winCells.first().dot)
     }
 
     private fun getFieldWithDot() : MutableList<Cell> {
@@ -67,15 +80,12 @@ class FieldPresenter : MvpPresenter<FieldView>() {
         for ((x, map) in field.withIndex()) {
             for ((y, cell) in map.withIndex()) {
                 if (cell.isEmpty) {
-                    Log.i("TAG", "cell $x $y is empty")
                     continue
                 } else {
                     newField.add(cell)
-                    Log.i("TAG", "dot is ${cell.dot.toString()}")
                 }
             }
         }
-        Log.i("TAG", "new field size = ${newField.size}")
         return newField
     }
 
@@ -98,8 +108,6 @@ class FieldPresenter : MvpPresenter<FieldView>() {
                     right = (x + 1) * cellSize
                     bottom = (y + 1) * cellSize
                 }
-                Log.i("TAG", "y = $y, x = $x, left = ${x*cellSize}, top = ${y*cellSize}, " +
-                        "right = ${(x+1)*cellSize}, bottom = ${(y+1)*cellSize}")
             }
         }
     }

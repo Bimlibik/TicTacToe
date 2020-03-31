@@ -5,10 +5,6 @@ import com.foxy.tictactoe.data.Cell
 
 class GameManager() {
 
-    private var player = Player.X
-
-    val getPlayer get() = player
-
     fun getDot(cell: Cell, playerX: Boolean) : Dot {
         if (isCellValid(cell)) {
             return when(playerX) {
@@ -32,7 +28,6 @@ class GameManager() {
     private fun checkColumn(x: Int, field: Array<Array<Cell>>, dot: Dot, winLength: Int,
                             winCells: Array<Cell>) : Boolean {
         for (y in 0 until winLength) {
-            Log.i("TAG_COLUMN", "x = $x, cell dot is = ${field[x][y].dot}")
             if (field[x][y].dot != dot) {
                 return false
             }
@@ -40,7 +35,6 @@ class GameManager() {
 
         for (i in 0 until winLength) {
             winCells[i] = field[x][i]
-            Log.i("TAG_COLUMN", "win cells[i] = ${winCells[i].dot}")
         }
         return true
     }
@@ -48,7 +42,6 @@ class GameManager() {
     private fun checkRow(y: Int, field: Array<Array<Cell>>, dot: Dot, winLength: Int,
                          winCells: Array<Cell>) : Boolean {
         for (x in 0 until winLength) {
-            Log.i("TAG_ROW", "x = $y, cell dot is = ${field[x][y].dot}")
             if (field[x][y].dot != dot) {
                 return false
             }
@@ -56,7 +49,6 @@ class GameManager() {
 
         for (i in 0 until winLength) {
             winCells[i] = field[i][y]
-            Log.i("TAG_ROW", "win cells[i] = ${winCells[i].dot}")
         }
         return true
     }
@@ -64,7 +56,6 @@ class GameManager() {
     private fun checkDiagonalFromLeftToRight(field: Array<Array<Cell>>, dot: Dot, winLength: Int,
                                              winCells: Array<Cell>) : Boolean {
         for(i in 0 until winLength) {
-            Log.i("TAG2", "cell dot is = ${field[i][i].dot}")
             if (field[i][i].dot != dot) {
                 return false
             }
@@ -78,7 +69,6 @@ class GameManager() {
         // right to left
         var count = 1
         for (i in 0 until winLength) {
-            Log.i("TAG2", "cell dot is = ${field[winLength - count][i].dot}")
             if (field[winLength - count][i].dot != dot) {
                 return false
             }
