@@ -1,9 +1,60 @@
 package com.foxy.tictactoe.utils
 
-import android.util.Log
 import com.foxy.tictactoe.data.Cell
 
 class GameManager() {
+
+    private var winLine = Win.HORIZONTAL
+
+    fun getStartCoordinates(winCells: Array<Cell>, halfCellSize: Int) : Pair<Float, Float> {
+        var x = 0f
+        var y = 0f
+
+        when(winLine) {
+            Win.HORIZONTAL -> {
+                x = winCells.first().left.toFloat()
+                y = (winCells.first().top + halfCellSize).toFloat()
+            }
+            Win.VERTICAL -> {
+                x = (winCells.first().left + halfCellSize).toFloat()
+                y = winCells.first().top.toFloat()
+            }
+            Win.DIAGONAL_LEFT -> {
+                x = winCells.first().left.toFloat()
+                y = winCells.first().top.toFloat()
+            }
+            Win.DIAGONAL_RIGHT -> {
+                x = winCells.first().right.toFloat()
+                y = winCells.first().top.toFloat()
+            }
+        }
+        return Pair(x, y)
+    }
+
+    fun getEndCoordinates(winCells: Array<Cell>, halfCellSize: Int) : Pair<Float, Float> {
+        var x = 0f
+        var y = 0f
+
+        when(winLine) {
+            Win.HORIZONTAL -> {
+                x = winCells.last().right.toFloat()
+                y = (winCells.first().top + halfCellSize).toFloat()
+            }
+            Win.VERTICAL -> {
+                x = (winCells.first().left + halfCellSize).toFloat()
+                y = winCells.last().bottom.toFloat()
+            }
+            Win.DIAGONAL_LEFT -> {
+                x = winCells.last().right.toFloat()
+                y = winCells.last().bottom.toFloat()
+            }
+            Win.DIAGONAL_RIGHT -> {
+                x = winCells.last().left.toFloat()
+                y = winCells.last().bottom.toFloat()
+            }
+        }
+        return Pair(x, y)
+    }
 
     fun getDot(cell: Cell, playerX: Boolean) : Dot {
         if (isCellValid(cell)) {
@@ -36,6 +87,7 @@ class GameManager() {
         for (i in 0 until winLength) {
             winCells[i] = field[x][i]
         }
+        winLine = Win.VERTICAL
         return true
     }
 
@@ -50,6 +102,7 @@ class GameManager() {
         for (i in 0 until winLength) {
             winCells[i] = field[i][y]
         }
+        winLine = Win.HORIZONTAL
         return true
     }
 
@@ -61,6 +114,7 @@ class GameManager() {
             }
             winCells[i] = field[i][i]
         }
+        winLine = Win.DIAGONAL_LEFT
         return true
     }
 
@@ -75,6 +129,7 @@ class GameManager() {
             winCells[i] = field[winLength - count][i]
             count++
         }
+        winLine = Win.DIAGONAL_RIGHT
         return true
     }
 

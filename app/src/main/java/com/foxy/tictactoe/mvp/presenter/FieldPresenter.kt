@@ -20,6 +20,7 @@ class FieldPresenter : MvpPresenter<FieldView>() {
 
     fun reset() {
         field = Array(cellCount) { Array(cellCount) { Cell() } }
+        playerX = true
         initField()
         viewState.replay()
     }
@@ -62,23 +63,20 @@ class FieldPresenter : MvpPresenter<FieldView>() {
 
         if (gameManager.isFieldFull(field)) {
             viewState.showTie()
-            Log.i("WIN", "game end with a tie")
         }
     }
 
     private fun calculateCoordinatesForAnimation(winCells: Array<Cell>) {
         val halfCellSize = (size / cellCount) / 2
-        val centerX1 = (winCells.first().right - halfCellSize).toFloat()
-        val centerY1 = (winCells.first().bottom - halfCellSize).toFloat()
-        val centerX2 = (winCells.last().right - halfCellSize).toFloat()
-        val centerY2 = (winCells.last().bottom - halfCellSize).toFloat()
-        viewState.showWinner(centerX1, centerY1, centerX2, centerY2, winCells.first().dot)
+        val start = gameManager.getStartCoordinates(winCells, halfCellSize)
+        val end = gameManager.getEndCoordinates(winCells, halfCellSize)
+        viewState.showWinner(start.first, start.second, end.first, end.second, winCells.first().dot)
     }
 
     private fun getFieldWithDot() : MutableList<Cell> {
         val newField = mutableListOf<Cell>()
-        for ((x, map) in field.withIndex()) {
-            for ((y, cell) in map.withIndex()) {
+        for (map in field) {
+            for (cell in map) {
                 if (cell.isEmpty) {
                     continue
                 } else {
@@ -90,7 +88,7 @@ class FieldPresenter : MvpPresenter<FieldView>() {
     }
 
     private fun getCellIndex(x: Int, y: Int) : Pair<Int, Int> {
-        field.forEachIndexed {i, cells ->
+        field.forEachIndexed { i, cells ->
             for ((j, cell) in cells.withIndex()) {
                 if (cell.contains(x, y)) return Pair(i, j)
             }
