@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ListPreference
+        android:key="prefs_game_mode"
+        android:title="Game mode"
+        android:entries="@array/list_game_mode"
+        android:entryValues="@array/list_game_mode"
+        android:summary="%s"
+        android:defaultValue="0" />
+
+    <SeekBarPreference
+        android:key="prefs_field_size"
+        android:title="Field size"
+        android:defaultValue="3"
+        android:max="10"
+        app:min="3"
+        app:showSeekBarValue="true"/>
+
+</PreferenceScreen>

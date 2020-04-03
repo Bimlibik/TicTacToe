@@ -15,9 +15,17 @@
         <action
             android:id="@+id/action_start_fragment_to_field_fragment"
             app:destination="@id/field_fragment" />
+        <action
+            android:id="@+id/action_start_fragment_to_settings_fragment"
+            app:destination="@id/settings_fragment" />
     </fragment>
     <fragment
         android:id="@+id/field_fragment"
         android:name="com.foxy.tictactoe.ui.FieldFragment"
         android:label="FieldFragment" />
+
+    <fragment
+        android:id="@+id/settings_fragment"
+        android:name="com.foxy.tictactoe.ui.SettingsFragment"
+        android:label="SettingsFragment" />
 </navigation>
