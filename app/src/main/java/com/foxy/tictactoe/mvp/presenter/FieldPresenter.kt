@@ -5,6 +5,8 @@ import com.foxy.tictactoe.data.Cell
 import com.foxy.tictactoe.mvp.view.FieldView
 import com.foxy.tictactoe.utils.Dot
 import com.foxy.tictactoe.utils.GameManager
+import com.foxy.tictactoe.utils.getFieldSize
+import com.foxy.tictactoe.utils.getGameMode
 import moxy.InjectViewState
 import moxy.MvpPresenter
 
@@ -12,11 +14,19 @@ import moxy.MvpPresenter
 class FieldPresenter : MvpPresenter<FieldView>() {
 
     private val gameManager = GameManager()
+    private var gameMode = ""
     private var size = 0
-    private val cellCount = 3
+    private var cellCount = 3
     private var playerX = true
     private var currentCellIndex = Pair(0, 0)
-    private var field = Array(cellCount) { Array(cellCount) { Cell() } }
+    private lateinit var field: Array<Array<Cell>>
+
+    override fun onFirstViewAttach() {
+        super.onFirstViewAttach()
+        cellCount = getFieldSize()
+        gameMode = getGameMode()
+        field = Array(cellCount) { Array(cellCount) { Cell() } }
+    }
 
     fun reset() {
         field = Array(cellCount) { Array(cellCount) { Cell() } }
@@ -35,6 +45,8 @@ class FieldPresenter : MvpPresenter<FieldView>() {
     fun saveCellIndex(x: Int, y: Int) {
         currentCellIndex = getCellIndex(x, y)
     }
+
+    fun getCellCount() : Int = getFieldSize()
 
     fun setFieldSize(size: Int) {
         this.size = size
@@ -97,6 +109,7 @@ class FieldPresenter : MvpPresenter<FieldView>() {
     }
 
     private fun initField() {
+        cellCount = getFieldSize()
         val cellSize = size / cellCount
         for (y in 0 until cellCount) {
             for (x in 0 until cellCount) {

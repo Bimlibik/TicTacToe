@@ -33,6 +33,7 @@ class FieldFragment : MvpAppCompatFragment(), FieldView, FieldCallback {
 
         setupToolbar()
         field.setupFieldCallback(this)
+        field.setCellCount(presenter.getCellCount())
         btn_replay.setOnClickListener { presenter.reset() }
         btn_exit.setOnClickListener { openStartFragment() }
     }
