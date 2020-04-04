@@ -20,6 +20,7 @@ buildscript {
         materialVersion = '1.2.0-alpha01'
         moxyVersion = '2.0.2'
         navigationVersion = '2.2.1'
+        preference = '1.1.0'
         roomVersion = '2.2.4'
         testExtJunit = '1.1.1'
         toothpick = '3.1.0'

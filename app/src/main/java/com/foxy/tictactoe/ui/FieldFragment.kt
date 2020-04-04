@@ -1,10 +1,11 @@
 package com.foxy.tictactoe.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.navigation.fragment.findNavController
 import com.foxy.tictactoe.R
 import com.foxy.tictactoe.data.Cell
@@ -30,7 +31,9 @@ class FieldFragment : MvpAppCompatFragment(), FieldView, FieldCallback {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupToolbar()
         field.setupFieldCallback(this)
+        field.setCellCount(presenter.getCellCount())
         btn_replay.setOnClickListener { presenter.reset() }
         btn_exit.setOnClickListener { openStartFragment() }
     }
@@ -81,5 +84,10 @@ class FieldFragment : MvpAppCompatFragment(), FieldView, FieldCallback {
 
     override fun onCellClick(x: Int, y: Int) {
         presenter.checkFinalCellIndex(x, y)
+    }
+
+    private fun setupToolbar() {
+        val toolbar: Toolbar = (activity as AppCompatActivity).findViewById(R.id.toolbar)
+        toolbar.visibility = View.GONE
     }
 }

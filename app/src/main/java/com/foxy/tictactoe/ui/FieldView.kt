@@ -4,7 +4,6 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.foxy.tictactoe.data.Cell
@@ -17,7 +16,7 @@ class FieldView : View {
 
     constructor(ctx: Context, attrs: AttributeSet) : super(ctx, attrs)
 
-    private val COUNT = 3
+    private var cellCount = 3
     private var dotInfo = mutableListOf<Cell>()
     private lateinit var callback: FieldCallback
     private var hasAnimate = false
@@ -31,7 +30,6 @@ class FieldView : View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         // выбирает минимальную длину экрана (ширина / высота) и устанавливает ее как размер
         // всех сторон view
-        Log.i("TAG", "onMeasure")
         val size = min(measuredHeight, measuredWidth)
         setMeasuredDimension(size, size)
         callback.saveFieldSize(size)
@@ -79,6 +77,10 @@ class FieldView : View {
         invalidate()
     }
 
+    fun setCellCount(cellCount: Int) {
+        this.cellCount = cellCount
+    }
+
     fun setupFieldCallback(callback: FieldCallback) {
         this.callback = callback
     }
@@ -110,23 +112,23 @@ class FieldView : View {
     }
 
     private fun drawDot(canvas: Canvas, cell: Cell) {
-        val margin = (width / COUNT) / 4
+        val margin = (width / cellCount) / 4
         val startX = (cell.left + margin).toFloat()
         val startY = (cell.bottom - margin).toFloat()
         canvas.drawText(cell.dot.toString(), startX, startY, dotPaint)
     }
 
     private fun drawVerticalLines(canvas: Canvas) {
-        val cellWidth = (width / COUNT).toFloat()
-        for (i in 1 until COUNT) {
+        val cellWidth = (width / cellCount).toFloat()
+        for (i in 1 until cellCount) {
             val x = i * cellWidth
             canvas.drawLine(x, 0f, x, height.toFloat(), linePaint)
         }
     }
 
     private fun drawHorizontalLines(canvas: Canvas) {
-        val cellHeight = (height / COUNT).toFloat()
-        for (i in 1 until COUNT) {
+        val cellHeight = (height / cellCount).toFloat()
+        for (i in 1 until cellCount) {
             val y = i * cellHeight
             canvas.drawLine(0f, y, width.toFloat(), y, linePaint)
         }
@@ -143,7 +145,8 @@ class FieldView : View {
         dotPaint.apply {
             color = Color.BLACK
             isAntiAlias = true
-            textSize = resources.displayMetrics.scaledDensity * 70
+            val margin = (width / cellCount) / 4
+            textSize = resources.displayMetrics.scaledDensity * margin
         }
 
         animatePaint.apply {

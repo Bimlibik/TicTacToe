@@ -7,4 +7,12 @@
     <string name="content_description_replay">Replay</string>
     <string name="tv_win_info">Winner is %s</string>
     <string name="tv_info">Game end with a tie</string>
+    <string name="toolbar_title_settings">Settings</string>
+
+
+    <string-array name="list_game_mode">
+        <item>Player vs Player</item>
+        <item>Player vs Ai (lazy)</item>
+        <item>Player vs Ai (hard)</item>
+    </string-array>
 </resources>
