@@ -12,6 +12,7 @@
 
     <string-array name="list_game_mode">
         <item>Player vs Player</item>
-        <item>Player vs Ai</item>
+        <item>Player vs Ai (lazy)</item>
+        <item>Player vs Ai (hard)</item>
     </string-array>
 </resources>

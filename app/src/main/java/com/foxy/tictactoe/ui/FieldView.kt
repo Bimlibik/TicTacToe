@@ -4,7 +4,6 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.foxy.tictactoe.data.Cell
@@ -31,7 +30,6 @@ class FieldView : View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         // выбирает минимальную длину экрана (ширина / высота) и устанавливает ее как размер
         // всех сторон view
-        Log.i("TAG", "onMeasure")
         val size = min(measuredHeight, measuredWidth)
         setMeasuredDimension(size, size)
         callback.saveFieldSize(size)
