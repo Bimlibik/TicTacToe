@@ -14,8 +14,7 @@ import moxy.MvpAppCompatFragment
 class StartFragment : MvpAppCompatFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+                              savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_start, container, false)
     }
 
@@ -25,6 +24,7 @@ class StartFragment : MvpAppCompatFragment() {
         setupToolbar()
         btn_play.setOnClickListener { startGame() }
         btn_settings.setOnClickListener { openSettings() }
+        btn_statistics.setOnClickListener { openStatistics() }
     }
 
     private fun startGame() {
@@ -34,6 +34,11 @@ class StartFragment : MvpAppCompatFragment() {
 
     private fun openSettings() {
         val action = StartFragmentDirections.actionStartFragmentToSettingsFragment()
+        findNavController().navigate(action)
+    }
+
+    private fun openStatistics() {
+        val action = StartFragmentDirections.actionStartFragmentToStatisticsFragment()
         findNavController().navigate(action)
     }
 
