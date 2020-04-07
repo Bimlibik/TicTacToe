@@ -98,6 +98,7 @@ class FieldPresenter : MvpPresenter<FieldView>() {
         if (winInfo.first) {
             hasWin = winInfo.first
             calculateCoordinatesForAnimation(winInfo.second)
+            saveStatistics()
             return
         }
 
@@ -113,6 +114,14 @@ class FieldPresenter : MvpPresenter<FieldView>() {
         val start = gameManager.getStartWinCoordinates(winCells, halfCellSize)
         val end = gameManager.getEndWinCoordinates(winCells, halfCellSize)
         viewState.showWinner(start.first, start.second, end.first, end.second, winCells.first().dot)
+    }
+
+    private fun saveStatistics() {
+        when(gameMode) {
+            GameMode.PvP -> savePvPStatistics(playerX)
+            GameMode.PvA_Lazy -> savePvALazyStatistics(playerX)
+            GameMode.PvA_Hard -> savePvAHardStatistics(playerX)
+        }
     }
 
     private fun getFieldWithDot(): MutableList<Cell> {

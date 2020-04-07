@@ -8,6 +8,12 @@
     <string name="tv_win_info">Winner is %s</string>
     <string name="tv_info">Game end with a tie</string>
     <string name="toolbar_title_settings">Settings</string>
+    <string name="toolbar_title_statistics">Statistics</string>
+    <string name="tv_title_pvp">Player vs Player</string>
+    <string name="tv_player_x">Player X</string>
+    <string name="tv_player_0">Player 0</string>
+    <string name="tv_title_pva_lazy">Player vs Ai (lazy)</string>
+    <string name="tv_title_pva_hard">Player vs Ai (hard)</string>
 
 
     <string-array name="list_game_mode">

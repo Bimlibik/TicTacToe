@@ -18,7 +18,11 @@
         <action
             android:id="@+id/action_start_fragment_to_settings_fragment"
             app:destination="@id/settings_fragment" />
+        <action
+            android:id="@+id/action_start_fragment_to_statistics_fragment"
+            app:destination="@id/statistics_fragment" />
     </fragment>
+
     <fragment
         android:id="@+id/field_fragment"
         android:name="com.foxy.tictactoe.ui.FieldFragment"
@@ -28,4 +32,9 @@
         android:id="@+id/settings_fragment"
         android:name="com.foxy.tictactoe.ui.SettingsFragment"
         android:label="SettingsFragment" />
+
+    <fragment
+        android:id="@+id/statistics_fragment"
+        android:name="com.foxy.tictactoe.ui.StatisticsFragment"
+        android:label="StatisticsFragment" />
 </navigation>
