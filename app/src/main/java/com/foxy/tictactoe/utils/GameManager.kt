@@ -1,8 +1,10 @@
 package com.foxy.tictactoe.utils
 
 import com.foxy.tictactoe.data.Cell
+import toothpick.InjectConstructor
 import java.util.*
 
+@InjectConstructor
 class GameManager {
 
     private var winLine = Win.HORIZONTAL

@@ -7,6 +7,8 @@ import toothpick.config.Module
 class AppModule(context: Context) : Module() {
     init {
         bind(Context::class.java).toInstance(context)
+
+        // ?
         val gameManager = GameManager()
         bind(GameManager::class.java).toInstance(gameManager)
     }

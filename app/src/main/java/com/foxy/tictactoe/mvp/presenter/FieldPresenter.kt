@@ -1,15 +1,19 @@
 package com.foxy.tictactoe.mvp.presenter
 
 import com.foxy.tictactoe.data.Cell
+import com.foxy.tictactoe.di.Scopes
 import com.foxy.tictactoe.mvp.view.FieldView
 import com.foxy.tictactoe.utils.*
 import moxy.InjectViewState
 import moxy.MvpPresenter
+import toothpick.Toothpick
+import javax.inject.Inject
 
 @InjectViewState
 class FieldPresenter : MvpPresenter<FieldView>() {
 
-    private val gameManager = GameManager()
+    @Inject
+    lateinit var gameManager: GameManager
     private var gameMode = ""
     private var size = 0
     private var cellCount = 3
@@ -20,6 +24,9 @@ class FieldPresenter : MvpPresenter<FieldView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
+
+        val scope = Toothpick.openScope(Scopes.APP)
+        Toothpick.inject(this, scope)
         cellCount = getFieldSize()
         gameMode = getGameMode()
         field = Array(cellCount) { Array(cellCount) { Cell() } }
