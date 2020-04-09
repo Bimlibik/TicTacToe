@@ -26,9 +26,9 @@ private val prefsStatistics by lazy {
     App.get().getSharedPreferences("com.foxy.tictactoe_prefs_statistics", Context.MODE_PRIVATE)
 }
 
-fun getGameMode() : String = prefsSettings.getString(GAME_MODE, GAME_MODE_DEFAULT)!!
+fun getPrefsGameMode() : String = prefsSettings.getString(GAME_MODE, GAME_MODE_DEFAULT)!!
 
-fun getFieldSize() : Int = prefsSettings.getInt(FIELD_SIZE, FIELD_SIZE_DEFAULT)
+fun getPrefsFieldSize() : Int = prefsSettings.getInt(FIELD_SIZE, FIELD_SIZE_DEFAULT)
 
 fun savePvPStatistics(playerX: Boolean) {
     val pvp = getPvPStatistics()

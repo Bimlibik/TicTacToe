@@ -1,27 +1,42 @@
 package com.foxy.tictactoe.mvp.presenter
 
 import com.foxy.tictactoe.data.Cell
+import com.foxy.tictactoe.data.GameRepository
+import com.foxy.tictactoe.di.Scopes
 import com.foxy.tictactoe.mvp.view.FieldView
 import com.foxy.tictactoe.utils.*
 import moxy.InjectViewState
 import moxy.MvpPresenter
+import toothpick.Toothpick
+import javax.inject.Inject
 
 @InjectViewState
 class FieldPresenter : MvpPresenter<FieldView>() {
 
-    private val gameManager = GameManager()
+    @Inject
+    lateinit var gameManager: GameManager
+
+    @Inject
+    lateinit var repository: GameRepository
+    private lateinit var field: Array<Array<Cell>>
+
     private var gameMode = ""
     private var size = 0
     private var cellCount = 3
     private var playerX = true
     private var hasWin = false
     private var currentCellIndex = Pair(0, 0)
-    private lateinit var field: Array<Array<Cell>>
+
+    init {
+        val scope = Toothpick.openScope(Scopes.APP)
+        Toothpick.inject(this, scope)
+    }
+
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        cellCount = getFieldSize()
-        gameMode = getGameMode()
+        cellCount = repository.getFieldSize()
+        gameMode = repository.getGameMode()
         field = Array(cellCount) { Array(cellCount) { Cell() } }
     }
 
@@ -46,7 +61,7 @@ class FieldPresenter : MvpPresenter<FieldView>() {
         currentCellIndex = getCellIndex(x, y)
     }
 
-    fun getCellCount(): Int = getFieldSize()
+    fun getCellCount(): Int = repository.getFieldSize()
 
     fun setFieldSize(size: Int) {
         this.size = size
@@ -58,7 +73,7 @@ class FieldPresenter : MvpPresenter<FieldView>() {
         val dot = gameManager.getDot(cell, playerX)
         if (dot == Dot.EMPTY) return
 
-        when(gameMode) {
+        when (gameMode) {
             GameMode.PvP -> checkPlayerStep(index)
             GameMode.PvA_Lazy, GameMode.PvA_Hard -> {
                 if (playerX) {
@@ -117,11 +132,7 @@ class FieldPresenter : MvpPresenter<FieldView>() {
     }
 
     private fun saveStatistics() {
-        when(gameMode) {
-            GameMode.PvP -> savePvPStatistics(playerX)
-            GameMode.PvA_Lazy -> savePvALazyStatistics(playerX)
-            GameMode.PvA_Hard -> savePvAHardStatistics(playerX)
-        }
+        repository.saveStatistics(gameMode, playerX)
     }
 
     private fun getFieldWithDot(): MutableList<Cell> {
@@ -148,7 +159,7 @@ class FieldPresenter : MvpPresenter<FieldView>() {
     }
 
     private fun initField() {
-        cellCount = getFieldSize()
+        cellCount = repository.getFieldSize()
         val cellSize = size / cellCount
         for (y in 0 until cellCount) {
             for (x in 0 until cellCount) {

@@ -8,16 +8,23 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.fragment.findNavController
 import com.foxy.tictactoe.R
-import com.foxy.tictactoe.utils.getPvAHardStatistics
-import com.foxy.tictactoe.utils.getPvALazyStatistics
-import com.foxy.tictactoe.utils.getPvPStatistics
+import com.foxy.tictactoe.data.GameRepository
+import com.foxy.tictactoe.di.Scopes
+import com.foxy.tictactoe.utils.GameMode
 import kotlinx.android.synthetic.main.fragment_statistics.*
 import moxy.MvpAppCompatFragment
+import toothpick.Toothpick
+import javax.inject.Inject
 
 class StatisticsFragment : MvpAppCompatFragment() {
 
+    @Inject
+    lateinit var repository: GameRepository
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        val scope = Toothpick.openScope(Scopes.APP)
+        Toothpick.inject(this, scope)
         return inflater.inflate(R.layout.fragment_statistics, container, false)
     }
 
@@ -28,9 +35,9 @@ class StatisticsFragment : MvpAppCompatFragment() {
     }
 
     private fun setupStatistics() {
-        val pvp = getPvPStatistics()
-        val pvaLazy = getPvALazyStatistics()
-        val pvaHard = getPvAHardStatistics()
+        val pvp = repository.getStatistics(GameMode.PvP)
+        val pvaLazy = repository.getStatistics(GameMode.PvA_Lazy)
+        val pvaHard = repository.getStatistics(GameMode.PvA_Hard)
 
         tv_pvp_x.text = pvp.first.toString()
         tv_pvp_o.text = pvp.second.toString()
