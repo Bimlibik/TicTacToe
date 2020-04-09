@@ -151,7 +151,7 @@ class GameManager {
             for ((y, cell) in cells.withIndex()) {
                 if (isCellValid(cell)) {
                     cell.dot = Dot.O
-                    if (isWin(Pair(x, y), field, cell.dot, getFieldSize()).first) {
+                    if (isWin(Pair(x, y), field, cell.dot, winLength).first) {
                         cell.dot = Dot.EMPTY
                         return Pair(x, y)
                     } else {
@@ -166,7 +166,7 @@ class GameManager {
             for ((y, cell) in cells.withIndex()) {
                 if (isCellValid(cell)) {
                     cell.dot = Dot.X
-                    if (isWin(Pair(x, y), field, cell.dot, getFieldSize()).first) {
+                    if (isWin(Pair(x, y), field, cell.dot, winLength).first) {
                         cell.dot = Dot.EMPTY
                         return Pair(x, y)
                     } else {
