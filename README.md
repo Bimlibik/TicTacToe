@@ -1,5 +1,5 @@
 # TicTacToe
 
-##Demo
+## Demo
 
 ![TicTactoe - Animated gif game demo](demo/game.gif)
