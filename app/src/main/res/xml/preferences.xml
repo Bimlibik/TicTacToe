@@ -8,11 +8,27 @@
         android:entries="@array/list_game_mode"
         android:entryValues="@array/list_game_mode"
         android:summary="%s"
-        android:defaultValue="0" />
+        android:defaultValue="Player vs Ai (lazy)" />
+
+    <ListPreference
+        android:key="prefs_first_step"
+        android:title="First step"
+        android:entries="@array/list_first_step"
+        android:entryValues="@array/list_first_step"
+        android:summary="%s"
+        android:defaultValue="Player" />
 
     <SeekBarPreference
         android:key="prefs_field_size"
         android:title="Field size"
+        android:defaultValue="3"
+        android:max="10"
+        app:min="3"
+        app:showSeekBarValue="true"/>
+
+    <SeekBarPreference
+        android:key="prefs_win_length"
+        android:title="Win line length"
         android:defaultValue="3"
         android:max="10"
         app:min="3"

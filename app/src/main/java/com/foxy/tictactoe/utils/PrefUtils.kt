@@ -6,9 +6,13 @@ import com.foxy.tictactoe.App
 
 // For settings
 private const val GAME_MODE = "prefs_game_mode"
-private const val GAME_MODE_DEFAULT = "Player vs Player"
+private const val GAME_MODE_DEFAULT = GameMode.PvA_Lazy
+private const val FIRST_STEP = "prefs_first_step"
+private const val FIRST_STEP_DEFAULT = "Player"
 private const val FIELD_SIZE = "prefs_field_size"
 private const val FIELD_SIZE_DEFAULT = 3
+private const val WIN_LINE_LENGTH = "prefs_win_length"
+private const val WIN_LINE_LENGTH_DEFAULT = 3
 
 // For statistics
 private const val PVP_PLAYER_X = "statistics_pvp_player_x"
@@ -28,7 +32,11 @@ private val prefsStatistics by lazy {
 
 fun getPrefsGameMode() : String = prefsSettings.getString(GAME_MODE, GAME_MODE_DEFAULT)!!
 
+fun getPrefsFirstStep() : String = prefsSettings.getString(FIRST_STEP, FIRST_STEP_DEFAULT)!!
+
 fun getPrefsFieldSize() : Int = prefsSettings.getInt(FIELD_SIZE, FIELD_SIZE_DEFAULT)
+
+fun getPrefsWinLineLength() : Int = prefsSettings.getInt(WIN_LINE_LENGTH, WIN_LINE_LENGTH_DEFAULT)
 
 fun savePvPStatistics(playerX: Boolean) {
     val pvp = getPvPStatistics()

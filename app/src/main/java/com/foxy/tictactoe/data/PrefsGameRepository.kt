@@ -10,8 +10,16 @@ class  PrefsGameRepository : GameRepository {
         return getPrefsGameMode()
     }
 
+    override fun getFirstStep(): String {
+        return getPrefsFirstStep()
+    }
+
     override fun getFieldSize(): Int {
         return getPrefsFieldSize()
+    }
+
+    override fun getWinLineLength(): Int {
+        return getPrefsWinLineLength()
     }
 
     override fun getStatistics(gameMode: String): Pair<Int, Int> {

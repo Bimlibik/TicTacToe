@@ -23,6 +23,7 @@ class FieldPresenter : MvpPresenter<FieldView>() {
     private var gameMode = ""
     private var size = 0
     private var cellCount = 3
+    private var winLength = 3
     private var playerX = true
     private var hasWin = false
     private var currentCellIndex = Pair(0, 0)
@@ -36,6 +37,7 @@ class FieldPresenter : MvpPresenter<FieldView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         cellCount = repository.getFieldSize()
+        winLength = repository.getWinLineLength()
         gameMode = repository.getGameMode()
         field = Array(cellCount) { Array(cellCount) { Cell() } }
     }

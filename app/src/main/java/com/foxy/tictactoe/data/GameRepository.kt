@@ -4,7 +4,11 @@ interface GameRepository {
 
     fun getGameMode(): String
 
+    fun getFirstStep(): String
+
     fun getFieldSize(): Int
+
+    fun getWinLineLength(): Int
 
     fun getStatistics(gameMode: String): Pair<Int, Int>
 

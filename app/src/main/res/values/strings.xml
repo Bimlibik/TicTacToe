@@ -21,4 +21,9 @@
         <item>Player vs Ai (lazy)</item>
         <item>Player vs Ai (hard)</item>
     </string-array>
+
+    <string-array name="list_first_step">
+        <item>Player</item>
+        <item>Ai</item>
+    </string-array>
 </resources>
