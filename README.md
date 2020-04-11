@@ -2,4 +2,4 @@
 
 ## Demo
 
-![TicTactoe - Animated gif game demo](demo/game.gif =250x250)
+![TicTactoe - Animated gif game demo](demo/game.gif | width=100)
