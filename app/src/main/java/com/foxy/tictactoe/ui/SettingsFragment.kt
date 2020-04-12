@@ -1,37 +1,55 @@
 package com.foxy.tictactoe.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.BaseAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SeekBarPreference
 import com.foxy.tictactoe.R
+import com.foxy.tictactoe.data.GameRepository
+import com.foxy.tictactoe.di.Scopes
+import toothpick.Toothpick
+import javax.inject.Inject
 
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
+    @Inject
+    lateinit var repository: GameRepository
+
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        val scope = Toothpick.openScope(Scopes.APP)
+        Toothpick.inject(this, scope)
+
         addPreferencesFromResource(R.xml.preferences)
         setupToolbar()
-        changeWinLengthMaxValue()
+        setupFieldSizeListener()
     }
 
-    private fun changeWinLengthMaxValue() {
+    private fun changeWinLength(value: Int, winLength: SeekBarPreference) {
+        winLength.max = value
+
+        if (winLength.value > value) {
+            winLength.value = value
+            repository.saveWinLineLength(winLength.value)
+        }
+    }
+
+    private fun setupFieldSizeListener() {
         val fieldSize = findPreference<SeekBarPreference>("prefs_field_size")
         val winLength = findPreference<SeekBarPreference>("prefs_win_length")
-        fieldSize?.setOnPreferenceChangeListener { preference, newValue ->
-            Log.i("TAG", "field seekbar click")
+        if (winLength != null && fieldSize != null) {
+            changeWinLength(fieldSize.value, winLength)
+        }
+
+        fieldSize?.setOnPreferenceChangeListener { _, newValue ->
             if (winLength != null) {
-                winLength.max = newValue as Int
+                changeWinLength(newValue as Int, winLength)
             }
-            
             true
         }
-        (preferenceScreen as BaseAdapter).notifyDataSetChanged()
     }
 
     private fun returnToStartFragment() {
