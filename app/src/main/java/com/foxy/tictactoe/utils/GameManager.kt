@@ -81,9 +81,9 @@ class GameManager {
 
     fun findAiStep(gameMode: String, field: Array<Array<Cell>>, winLength: Int): Pair<Int, Int> {
         return when (gameMode) {
-            GameMode.PvA_Lazy -> findLazyAiStep(field, winLength)
+            GameMode.PvA_Lazy -> findLazyAiStep(field)
             GameMode.PvA_Hard -> findHardAiStep(field, winLength)
-            else -> findLazyAiStep(field, winLength)
+            else -> findLazyAiStep(field)
         }
     }
 
@@ -98,51 +98,76 @@ class GameManager {
 
     private fun checkColumn(x: Int, field: Array<Array<Cell>>, dot: Dot, winLength: Int,
                             winCells: Array<Cell>): Boolean {
-        for (y in 0 until winLength) {
-            if (field[x][y].dot != dot) return false
+        var count = 0
+        for (y in field.indices) {
+            if (field.size == winLength && field[x][y].dot != dot) return false
+
+            if (field[x][y].dot == dot) {
+                winCells[count] = field[x][y]
+                count++
+                if (count == winLength) break
+            } else {
+                count = 0
+            }
         }
 
-        for (i in 0 until winLength) {
-            winCells[i] = field[x][i]
-        }
         winLine = Win.VERTICAL
-        return true
+        return count == winLength
     }
 
     private fun checkRow(y: Int, field: Array<Array<Cell>>, dot: Dot, winLength: Int,
                          winCells: Array<Cell>): Boolean {
-        for (x in 0 until winLength) {
-            if (field[x][y].dot != dot) return false
-        }
+        var count = 0
+        for (x in field.indices) {
+            if (field.size == winLength && field[x][y].dot != dot) return false
 
-        for (i in 0 until winLength) {
-            winCells[i] = field[i][y]
+            if (field[x][y].dot == dot) {
+                winCells[count] = field[x][y]
+                count++
+                if (count == winLength) break
+            } else {
+                count = 0
+            }
         }
         winLine = Win.HORIZONTAL
-        return true
+        return count == winLength
     }
 
     private fun checkDiagonalFromLeftToRight(field: Array<Array<Cell>>, dot: Dot, winLength: Int,
                                              winCells: Array<Cell>): Boolean {
-        for (i in 0 until winLength) {
-            if (field[i][i].dot != dot) return false
-            winCells[i] = field[i][i]
+        var count = 0
+        for (i in field.indices) {
+            if (field.size == winLength && field[i][i].dot != dot) return false
+
+            if (field[i][i].dot == dot) {
+                winCells[count] = field[i][i]
+                count++
+                if (count == winLength) break
+            } else {
+                count = 0
+            }
         }
 
         winLine = Win.DIAGONAL_LEFT
-        return true
+        return count == winLength
     }
 
     private fun checkDiagonalFromRightToLeft(field: Array<Array<Cell>>, dot: Dot, winLength: Int,
                                              winCells: Array<Cell>): Boolean {
-        var count = 1
-        for (i in 0 until winLength) {
-            if (field[winLength - count][i].dot != dot) return false
-            winCells[i] = field[winLength - count][i]
-            count++
+        var count = 0
+        for (i in field.indices) {
+            if (field.size == winLength && field[winLength - (i + 1)][i].dot != dot) return false
+
+            if (field[field.size - (i + 1)][i].dot == dot) {
+                winCells[count] = field[field.size - (i + 1)][i]
+                count++
+                if (count == winLength) break
+            } else {
+                count = 0
+            }
         }
         winLine = Win.DIAGONAL_RIGHT
-        return true
+        return count == winLength
     }
 
     private fun findHardAiStep(field: Array<Array<Cell>>, winLength: Int): Pair<Int, Int> {
@@ -177,17 +202,17 @@ class GameManager {
         }
 
         // рандом
-        return findLazyAiStep(field, winLength)
+        return findLazyAiStep(field)
     }
 
-    private fun findLazyAiStep(field: Array<Array<Cell>>, winLength: Int): Pair<Int, Int> {
+    private fun findLazyAiStep(field: Array<Array<Cell>>): Pair<Int, Int> {
         val random = Random()
         var x: Int
         var y: Int
 
         do {
-            x = random.nextInt(winLength)
-            y = random.nextInt(winLength)
+            x = random.nextInt(field.size)
+            y = random.nextInt(field.size)
         } while (!isCellValid(field[x][y]))
 
         return Pair(x, y)

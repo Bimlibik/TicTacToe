@@ -90,7 +90,7 @@ class FieldPresenter : MvpPresenter<FieldView>() {
         if (hasWin) return
         if (gameManager.isFieldFull(field)) return
 
-        val index = gameManager.findAiStep(gameMode, field, cellCount)
+        val index = gameManager.findAiStep(gameMode, field, winLength)
         if (index.first < 0 || index.second < 0) return
 
         changeDotInCell(index)
@@ -111,7 +111,7 @@ class FieldPresenter : MvpPresenter<FieldView>() {
     }
 
     private fun checkWin(index: Pair<Int, Int>, dot: Dot) {
-        val winInfo = gameManager.isWin(index, field, dot, cellCount)
+        val winInfo = gameManager.isWin(index, field, dot, winLength)
         if (winInfo.first) {
             hasWin = winInfo.first
             calculateCoordinatesForAnimation(winInfo.second)
