@@ -25,6 +25,15 @@ class GameManager {
             Win.DIAGONAL_LEFT -> {
                 x = winCells.first().left.toFloat()
                 y = winCells.first().top.toFloat()
+
+                for (cell in winCells) {
+                    if (cell.left.toFloat() < x) {
+                        x = cell.left.toFloat()
+                    }
+                    if (cell.top.toFloat() < y) {
+                        y = cell.top.toFloat()
+                    }
+                }
             }
             Win.DIAGONAL_RIGHT -> {
                 x = winCells.first().right.toFloat()
@@ -50,6 +59,16 @@ class GameManager {
             Win.DIAGONAL_LEFT -> {
                 x = winCells.last().right.toFloat()
                 y = winCells.last().bottom.toFloat()
+
+                for (cell in winCells) {
+                    if (cell.right.toFloat() > x) {
+                        x = cell.right.toFloat()
+                    }
+
+                    if (cell.bottom.toFloat() > y) {
+                        y = cell.bottom.toFloat()
+                    }
+                }
             }
             Win.DIAGONAL_RIGHT -> {
                 x = winCells.last().left.toFloat()
@@ -74,7 +93,7 @@ class GameManager {
         val winCells = Array(winLength) { Cell() }
         val isWin = checkColumn(index.first, field, dot, winLength, winCells) ||
                 checkRow(index.second, field, dot, winLength, winCells) ||
-                checkDiagonalFromLeftToRight(field, dot, winLength, winCells) ||
+                checkDiagonalFromLeftToRight(index.first, index.second, field, dot, winLength, winCells) ||
                 checkDiagonalFromRightToLeft(field, dot, winLength, winCells)
         return Pair(isWin, winCells)
     }
@@ -133,21 +152,32 @@ class GameManager {
         return count == winLength
     }
 
-    private fun checkDiagonalFromLeftToRight(field: Array<Array<Cell>>, dot: Dot, winLength: Int,
-                                             winCells: Array<Cell>): Boolean {
+    //    \ direction, all diagonals
+    private fun checkDiagonalFromLeftToRight(x: Int, y: Int, field: Array<Array<Cell>>, dot: Dot,
+                                             winLength: Int, winCells: Array<Cell>): Boolean {
         var count = 0
-        for (i in field.indices) {
+        for (i in 0 until winLength) {
             if (field.size == winLength && field[i][i].dot != dot) return false
+            if (x - i < 0 || y - i < 0) break
 
-            if (field[i][i].dot == dot) {
-                winCells[count] = field[i][i]
+            if (field[x - i][y - i].dot == dot) {
+                winCells[count] = field[x - i][y - i]
                 count++
-                if (count == winLength) break
             } else {
-                count = 0
+                break
             }
         }
 
+        for (i in 1 until winLength) {
+            if (x + i >= field.size || y + i >= field.size) break
+
+            if (field[x + i][y + i].dot == dot) {
+                winCells[count] = field[x + i][y + i]
+                count++
+            } else {
+                break
+            }
+        }
         winLine = Win.DIAGONAL_LEFT
         return count == winLength
     }
