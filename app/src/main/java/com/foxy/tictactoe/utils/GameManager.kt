@@ -93,7 +93,7 @@ class GameManager {
         val winCells = Array(winLength) { Cell() }
         val isWin = checkColumn(index.first, field, dot, winLength, winCells) ||
                 checkRow(index.second, field, dot, winLength, winCells) ||
-                checkDiagonalFromLeftToRight(index.first, index.second, field, dot, winLength, winCells) ||
+                checkDiagonalsFromLeftToRight(index.first, index.second, field, dot, winLength, winCells) ||
                 checkDiagonalFromRightToLeft(field, dot, winLength, winCells)
         return Pair(isWin, winCells)
     }
@@ -153,8 +153,8 @@ class GameManager {
     }
 
     //    \ direction, all diagonals
-    private fun checkDiagonalFromLeftToRight(x: Int, y: Int, field: Array<Array<Cell>>, dot: Dot,
-                                             winLength: Int, winCells: Array<Cell>): Boolean {
+    private fun checkDiagonalsFromLeftToRight(x: Int, y: Int, field: Array<Array<Cell>>, dot: Dot,
+                                              winLength: Int, winCells: Array<Cell>): Boolean {
         var count = 0
         for (i in 0 until winLength) {
             if (field.size == winLength && field[i][i].dot != dot) return false
