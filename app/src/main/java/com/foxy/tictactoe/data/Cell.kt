@@ -1,6 +1,6 @@
 package com.foxy.tictactoe.data
 
-import com.foxy.tictactoe.utils.Dot
+import com.foxy.tictactoe.utils.enums.Dot
 
 class Cell (
     var dot: Dot = Dot.EMPTY,

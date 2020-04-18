@@ -1,6 +1,7 @@
 package com.foxy.tictactoe.data
 
 import com.foxy.tictactoe.utils.*
+import com.foxy.tictactoe.utils.enums.GameMode
 import toothpick.InjectConstructor
 
 @InjectConstructor
@@ -12,6 +13,10 @@ class  PrefsGameRepository : GameRepository {
 
     override fun getFirstStep(): String {
         return getFirstStepFromPrefs()
+    }
+
+    override fun saveFirstStep(firstStep: String) {
+        saveFirstStepToPrefs(firstStep)
     }
 
     override fun getFieldSize(): Int {
@@ -36,11 +41,11 @@ class  PrefsGameRepository : GameRepository {
         return statistics
     }
 
-    override fun saveStatistics(gameMode: String, playerX: Boolean) {
+    override fun saveStatistics(gameMode: String, playerX: Boolean, winPlayer: Boolean) {
         when(gameMode) {
             GameMode.PvP -> savePvPStatisticsToPrefs(playerX)
-            GameMode.PvA_Lazy -> savePvALazyStatisticsToPrefs(playerX)
-            GameMode.PvA_Hard -> savePvAHardStatisticsToPrefs(playerX)
+            GameMode.PvA_Lazy -> savePvALazyStatisticsToPrefs(winPlayer)
+            GameMode.PvA_Hard -> savePvAHardStatisticsToPrefs(winPlayer)
         }
     }
 

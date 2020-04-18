@@ -5,11 +5,14 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.fragment.findNavController
+import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SeekBarPreference
 import com.foxy.tictactoe.R
 import com.foxy.tictactoe.data.GameRepository
 import com.foxy.tictactoe.di.Scopes
+import com.foxy.tictactoe.utils.enums.GameMode
+import com.foxy.tictactoe.utils.enums.Step
 import toothpick.Toothpick
 import javax.inject.Inject
 
@@ -26,14 +29,33 @@ class SettingsFragment : PreferenceFragmentCompat() {
         addPreferencesFromResource(R.xml.preferences)
         setupToolbar()
         setupFieldSizeListener()
+        setupGameMode()
     }
 
-    private fun changeWinLength(value: Int, winLength: SeekBarPreference) {
-        winLength.max = value
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        view.setBackgroundColor(resources.getColor(R.color.backgroundLight))
+    }
 
-        if (winLength.value > value) {
-            winLength.value = value
-            repository.saveWinLineLength(winLength.value)
+    private fun setupGameMode() {
+        val gameMode = findPreference<ListPreference>("prefs_game_mode")
+        val firstStep = findPreference<ListPreference>("prefs_first_step")
+        if (gameMode != null && firstStep != null) {
+            checkGameMode(gameMode.value, firstStep)
+            gameMode.setOnPreferenceChangeListener { _, newValue ->
+                checkGameMode(newValue.toString(), firstStep)
+                true
+            }
+        }
+    }
+
+    private fun checkGameMode(gameMode: String, firstStep: ListPreference) {
+        if (gameMode == GameMode.PvP) {
+            firstStep.value = Step.PLAYER
+            firstStep.isEnabled = false
+            repository.saveFirstStep(firstStep.value)
+        } else {
+            firstStep.isEnabled = true
         }
     }
 
@@ -49,6 +71,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 changeWinLength(newValue as Int, winLength)
             }
             true
+        }
+    }
+
+    private fun changeWinLength(value: Int, winLength: SeekBarPreference) {
+        winLength.max = value
+
+        if (winLength.value > value) {
+            winLength.value = value
+            repository.saveWinLineLength(winLength.value)
         }
     }
 

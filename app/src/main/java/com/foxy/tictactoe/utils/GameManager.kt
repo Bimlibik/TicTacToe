@@ -1,6 +1,9 @@
 package com.foxy.tictactoe.utils
 
 import com.foxy.tictactoe.data.Cell
+import com.foxy.tictactoe.utils.enums.Dot
+import com.foxy.tictactoe.utils.enums.GameMode
+import com.foxy.tictactoe.utils.enums.Win
 import toothpick.InjectConstructor
 import java.util.*
 
@@ -181,7 +184,7 @@ class GameManager {
             if (x - i < 0 || y - i < 0) break
 
             if (field[x - i][y - i].dot == dot) {
-                winCells[count] = field[x - i][y - i]
+                winCells[i] = field[x - i][y - i]
                 count++
             } else {
                 break
@@ -193,7 +196,7 @@ class GameManager {
             if (x + i >= field.size || y + i >= field.size) break
 
             if (field[x + i][y + i].dot == dot) {
-                winCells[count] = field[x + i][y + i]
+                winCells[i] = field[x + i][y + i]
                 count++
             } else {
                 break

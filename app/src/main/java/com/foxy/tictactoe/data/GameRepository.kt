@@ -6,6 +6,8 @@ interface GameRepository {
 
     fun getFirstStep(): String
 
+    fun saveFirstStep(firstStep: String)
+
     fun getFieldSize(): Int
 
     fun getWinLineLength(): Int
@@ -14,5 +16,5 @@ interface GameRepository {
 
     fun getStatistics(gameMode: String): Pair<Int, Int>
 
-    fun saveStatistics(gameMode: String, playerX: Boolean)
+    fun saveStatistics(gameMode: String, playerX: Boolean, winPlayer: Boolean)
 }

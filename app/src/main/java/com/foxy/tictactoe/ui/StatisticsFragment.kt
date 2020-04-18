@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.foxy.tictactoe.R
 import com.foxy.tictactoe.data.GameRepository
 import com.foxy.tictactoe.di.Scopes
-import com.foxy.tictactoe.utils.GameMode
+import com.foxy.tictactoe.utils.enums.GameMode
 import kotlinx.android.synthetic.main.fragment_statistics.*
 import moxy.MvpAppCompatFragment
 import toothpick.Toothpick

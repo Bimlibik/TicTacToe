@@ -3,6 +3,7 @@ package com.foxy.tictactoe.utils
 import android.content.Context
 import androidx.preference.PreferenceManager
 import com.foxy.tictactoe.App
+import com.foxy.tictactoe.utils.enums.GameMode
 
 // For settings
 private const val GAME_MODE = "prefs_game_mode"
@@ -17,10 +18,10 @@ private const val WIN_LINE_LENGTH_DEFAULT = 3
 // For statistics
 private const val PVP_PLAYER_X = "statistics_pvp_player_x"
 private const val PVP_PLAYER_O = "statistics_pvp_player_o"
-private const val PVA_LAZY_PLAYER_X = "statistics_pva_lazy_player_x"
-private const val PVA_LAZY_PLAYER_O = "statistics_pva_lazy_player_o"
-private const val PVA_HARD_PLAYER_X = "statistics_pva_hard_player_x"
-private const val PVA_HARD_PLAYER_O = "statistics_pva_hard_player_o"
+private const val PVA_LAZY_PLAYER = "statistics_pva_lazy_player"
+private const val PVA_LAZY_AI = "statistics_pva_lazy_ai"
+private const val PVA_HARD_PLAYER = "statistics_pva_hard_player"
+private const val PVA_HARD_AI = "statistics_pva_hard_ai"
 
 private val prefsSettings by lazy {
     PreferenceManager.getDefaultSharedPreferences(App.get())
@@ -33,6 +34,10 @@ private val prefsStatistics by lazy {
 fun getGameModeFromPrefs() : String = prefsSettings.getString(GAME_MODE, GAME_MODE_DEFAULT)!!
 
 fun getFirstStepFromPrefs() : String = prefsSettings.getString(FIRST_STEP, FIRST_STEP_DEFAULT)!!
+
+fun saveFirstStepToPrefs(firstStep: String) {
+    prefsSettings.edit().putString(FIRST_STEP, firstStep).apply()
+}
 
 fun getFieldSizeFromPrefs() : Int = prefsSettings.getInt(FIELD_SIZE, FIELD_SIZE_DEFAULT)
 
@@ -57,32 +62,32 @@ fun getPvPStatisticsFromPrefs(): Pair<Int, Int> {
     return Pair(x, o)
 }
 
-fun savePvALazyStatisticsToPrefs(playerX: Boolean) {
+fun savePvALazyStatisticsToPrefs(winPlayer: Boolean) {
     val pvaLazy = getPvALazyStatisticsFromPrefs()
-    if (playerX) {
-        prefsStatistics.edit().putInt(PVA_LAZY_PLAYER_X, pvaLazy.first + 1).apply()
+    if (winPlayer) {
+        prefsStatistics.edit().putInt(PVA_LAZY_PLAYER, pvaLazy.first + 1).apply()
     } else {
-        prefsStatistics.edit().putInt(PVA_LAZY_PLAYER_O, pvaLazy.second + 1).apply()
+        prefsStatistics.edit().putInt(PVA_LAZY_AI, pvaLazy.second + 1).apply()
     }
 }
 
 fun getPvALazyStatisticsFromPrefs(): Pair<Int, Int> {
-    val x = prefsStatistics.getInt(PVA_LAZY_PLAYER_X, 0)
-    val o = prefsStatistics.getInt(PVA_LAZY_PLAYER_O, 0)
-    return Pair(x, o)
+    val player = prefsStatistics.getInt(PVA_LAZY_PLAYER, 0)
+    val ai = prefsStatistics.getInt(PVA_LAZY_AI, 0)
+    return Pair(player, ai)
 }
 
 fun savePvAHardStatisticsToPrefs(playerX: Boolean) {
     val pvaHard = getPvAHardStatisticsFromPrefs()
     if (playerX) {
-        prefsStatistics.edit().putInt(PVA_HARD_PLAYER_X, pvaHard.first + 1).apply()
+        prefsStatistics.edit().putInt(PVA_HARD_PLAYER, pvaHard.first + 1).apply()
     } else {
-        prefsStatistics.edit().putInt(PVA_HARD_PLAYER_O, pvaHard.second + 1).apply()
+        prefsStatistics.edit().putInt(PVA_HARD_AI, pvaHard.second + 1).apply()
     }
 }
 
 fun getPvAHardStatisticsFromPrefs(): Pair<Int, Int> {
-    val x = prefsStatistics.getInt(PVA_HARD_PLAYER_X, 0)
-    val o = prefsStatistics.getInt(PVA_HARD_PLAYER_O, 0)
+    val x = prefsStatistics.getInt(PVA_HARD_PLAYER, 0)
+    val o = prefsStatistics.getInt(PVA_HARD_AI, 0)
     return Pair(x, o)
 }
