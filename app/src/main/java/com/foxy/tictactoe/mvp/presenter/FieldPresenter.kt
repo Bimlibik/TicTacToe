@@ -171,7 +171,6 @@ class FieldPresenter : MvpPresenter<FieldView>() {
         gameMode = repository.getGameMode()
         step = repository.getFirstStep()
         field = Array(cellCount) { Array(cellCount) { Cell() } }
-//        checkAiStep()
     }
 
     private fun initField() {
