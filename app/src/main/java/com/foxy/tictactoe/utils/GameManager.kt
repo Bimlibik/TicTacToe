@@ -100,7 +100,7 @@ class GameManager {
     }
 
     fun getDot(cell: Cell, playerX: Boolean): Dot {
-        if (isCellValid(cell)) {
+        if (cell.isEmpty) {
             return when (playerX) {
                 true -> Dot.X
                 else -> Dot.O
@@ -182,9 +182,10 @@ class GameManager {
         for (i in 0 until winLength) {
             if (field.size == winLength && field[i][i].dot != dot) return false
             if (x - i < 0 || y - i < 0) break
+            if (count == winLength) break
 
             if (field[x - i][y - i].dot == dot) {
-                winCells[i] = field[x - i][y - i]
+                winCells[count] = field[x - i][y - i]
                 count++
             } else {
                 break
@@ -194,9 +195,10 @@ class GameManager {
         // down from click
         for (i in 1 until winLength) {
             if (x + i >= field.size || y + i >= field.size) break
+            if (count == winLength) break
 
             if (field[x + i][y + i].dot == dot) {
-                winCells[i] = field[x + i][y + i]
+                winCells[count] = field[x + i][y + i]
                 count++
             } else {
                 break
@@ -215,6 +217,7 @@ class GameManager {
         for (i in 0 until winLength) {
             if (field.size == winLength && field[winLength - (i + 1)][i].dot != dot) return false
             if (x + i >= field.size || y - i < 0) break
+            if (count == winLength) break
 
             if (field[x + i][y - i].dot == dot) {
                 winCells[count] = field[x + i][y - i]
@@ -227,6 +230,7 @@ class GameManager {
         // down from click
         for (i in 1 until winLength) {
             if (x - i < 0 || y + i >= field.size) break
+            if (count == winLength) break
 
             if (field[x - i][y + i].dot == dot) {
                 winCells[count] = field[x - i][y + i]
@@ -243,7 +247,7 @@ class GameManager {
         // если поставить 0 == выигрыш
         for ((x, cells) in field.withIndex()) {
             for ((y, cell) in cells.withIndex()) {
-                if (isCellValid(cell)) {
+                if (cell.isEmpty) {
                     cell.dot = Dot.O
                     if (isWin(Pair(x, y), field, cell.dot, winLength).first) {
                         cell.dot = Dot.EMPTY
@@ -258,7 +262,7 @@ class GameManager {
         // если игрок поставит Х и выиграет
         for ((x, cells) in field.withIndex()) {
             for ((y, cell) in cells.withIndex()) {
-                if (isCellValid(cell)) {
+                if (cell.isEmpty) {
                     cell.dot = Dot.X
                     if (isWin(Pair(x, y), field, cell.dot, winLength).first) {
                         cell.dot = Dot.EMPTY
@@ -282,12 +286,8 @@ class GameManager {
         do {
             x = random.nextInt(field.size)
             y = random.nextInt(field.size)
-        } while (!isCellValid(field[x][y]))
+        } while (!field[x][y].isEmpty)
 
         return Pair(x, y)
-    }
-
-    private fun isCellValid(cell: Cell): Boolean {
-        return cell.dot == Dot.EMPTY
     }
 }

@@ -80,10 +80,8 @@ class FieldPresenter : MvpPresenter<FieldView>() {
             GameMode.PvA_Lazy, GameMode.PvA_Hard -> {
                 if (step == Step.PLAYER) {
                     checkPlayerStep(index)
-                    checkAiStep()
                 } else {
                     checkAiStep()
-                    step = Step.PLAYER
                 }
             }
         }
@@ -97,10 +95,18 @@ class FieldPresenter : MvpPresenter<FieldView>() {
         if (index.first < 0 || index.second < 0) return
 
         changeDotInCell(index)
+        step = Step.PLAYER
     }
 
     private fun checkPlayerStep(index: Pair<Int, Int>) {
+        val cell = field[index.first][index.second]
+        if (!cell.isEmpty) return
         changeDotInCell(index)
+
+        if (isPvE()) {
+            step = Step.AI
+            makeStep()
+        }
     }
 
     private fun changeDotInCell(index: Pair<Int, Int>) {
@@ -163,6 +169,10 @@ class FieldPresenter : MvpPresenter<FieldView>() {
             }
         }
         return Pair(-1, -1)
+    }
+
+    private fun isPvE(): Boolean {
+        return gameMode == GameMode.PvA_Lazy || gameMode == GameMode.PvA_Hard
     }
 
     private fun initGameSettings() {
