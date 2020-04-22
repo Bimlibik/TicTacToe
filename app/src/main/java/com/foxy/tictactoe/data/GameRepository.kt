@@ -17,4 +17,6 @@ interface GameRepository {
     fun getStatistics(gameMode: String): Pair<Int, Int>
 
     fun saveStatistics(gameMode: String, playerX: Boolean, winPlayer: Boolean)
+
+    fun clearStatistics()
 }

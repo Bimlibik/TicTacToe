@@ -49,4 +49,8 @@ class  PrefsGameRepository : GameRepository {
         }
     }
 
+    override fun clearStatistics() {
+        deleteStatisticsFromPrefs()
+    }
+
 }

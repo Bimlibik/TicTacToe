@@ -16,6 +16,10 @@
     <string name="tv_ai">Ai</string>
     <string name="tv_title_pva_lazy">Player vs Ai (lazy)</string>
     <string name="tv_title_pva_hard">Player vs Ai (hard)</string>
+    <string name="dialog_reset_title">Reset statistics</string>
+    <string name="dialog_reset_msg">Do you want to clear statistics?</string>
+    <string name="dialog_positive_btn">Yes</string>
+    <string name="dialog_negative_btn">No</string>
 
 
     <string-array name="list_game_mode">

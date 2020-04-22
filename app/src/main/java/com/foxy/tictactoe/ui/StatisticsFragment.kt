@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.fragment.findNavController
@@ -31,6 +32,22 @@ class StatisticsFragment : MvpAppCompatFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
+        setupStatistics()
+        btn_reset.setOnClickListener { resetStatistics() }
+    }
+
+    private fun resetStatistics() {
+        val dialog = AlertDialog.Builder(activity!!)
+        dialog.apply {
+            setTitle(getString(R.string.dialog_reset_title))
+            setMessage(getString(R.string.dialog_reset_msg))
+            setPositiveButton(getString(R.string.dialog_positive_btn)) { _, _ -> clearAllStatistics() }
+            setNegativeButton(getString(R.string.dialog_negative_btn)) { dialogInterface, _ -> dialogInterface.dismiss() }
+        }.show()
+    }
+
+    private fun clearAllStatistics() {
+        repository.clearStatistics()
         setupStatistics()
     }
 

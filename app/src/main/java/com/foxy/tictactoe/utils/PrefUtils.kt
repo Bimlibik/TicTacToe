@@ -91,3 +91,14 @@ fun getPvAHardStatisticsFromPrefs(): Pair<Int, Int> {
     val o = prefsStatistics.getInt(PVA_HARD_AI, 0)
     return Pair(x, o)
 }
+
+fun deleteStatisticsFromPrefs() {
+    prefsStatistics.edit()
+        .remove(PVP_PLAYER_X)
+        .remove(PVP_PLAYER_O)
+        .remove(PVA_LAZY_PLAYER)
+        .remove(PVA_LAZY_AI)
+        .remove(PVA_HARD_PLAYER)
+        .remove(PVA_HARD_AI)
+        .apply()
+}
