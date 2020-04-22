@@ -35,7 +35,7 @@ class FieldFragment : MvpAppCompatFragment(), FieldView, FieldCallback {
         field.setupFieldCallback(this)
         field.setCellCount(presenter.getCellCount())
         btn_replay.setOnClickListener { presenter.reset() }
-        btn_exit.setOnClickListener { openStartFragment() }
+        btn_return.setOnClickListener { openStartFragment() }
     }
 
     override fun drawDot(newField: MutableList<Cell>) {
