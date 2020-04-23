@@ -11,7 +11,7 @@ import com.foxy.tictactoe.R
 import com.foxy.tictactoe.data.Cell
 import com.foxy.tictactoe.mvp.presenter.FieldPresenter
 import com.foxy.tictactoe.mvp.view.FieldView
-import com.foxy.tictactoe.utils.Dot
+import com.foxy.tictactoe.utils.enums.Dot
 import com.foxy.tictactoe.utils.FieldCallback
 import kotlinx.android.synthetic.main.fragment_field.*
 import moxy.MvpAppCompatFragment
@@ -35,7 +35,7 @@ class FieldFragment : MvpAppCompatFragment(), FieldView, FieldCallback {
         field.setupFieldCallback(this)
         field.setCellCount(presenter.getCellCount())
         btn_replay.setOnClickListener { presenter.reset() }
-        btn_exit.setOnClickListener { openStartFragment() }
+        btn_return.setOnClickListener { openStartFragment() }
     }
 
     override fun drawDot(newField: MutableList<Cell>) {

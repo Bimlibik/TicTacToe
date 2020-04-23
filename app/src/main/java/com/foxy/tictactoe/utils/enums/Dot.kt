@@ -1,4 +1,4 @@
-package com.foxy.tictactoe.utils
+package com.foxy.tictactoe.utils.enums
 
 enum class Dot {
     X,

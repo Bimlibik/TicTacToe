@@ -1,6 +1,9 @@
 package com.foxy.tictactoe.utils
 
 import com.foxy.tictactoe.data.Cell
+import com.foxy.tictactoe.utils.enums.Dot
+import com.foxy.tictactoe.utils.enums.GameMode
+import com.foxy.tictactoe.utils.enums.Win
 import toothpick.InjectConstructor
 import java.util.*
 
@@ -25,10 +28,28 @@ class GameManager {
             Win.DIAGONAL_LEFT -> {
                 x = winCells.first().left.toFloat()
                 y = winCells.first().top.toFloat()
+
+                for (cell in winCells) {
+                    if (cell.left.toFloat() < x) {
+                        x = cell.left.toFloat()
+                    }
+                    if (cell.top.toFloat() < y) {
+                        y = cell.top.toFloat()
+                    }
+                }
             }
             Win.DIAGONAL_RIGHT -> {
                 x = winCells.first().right.toFloat()
                 y = winCells.first().top.toFloat()
+
+                for (cell in winCells) {
+                    if (cell.right.toFloat() > x) {
+                        x = cell.right.toFloat()
+                    }
+                    if (cell.top.toFloat() < y) {
+                        y = cell.top.toFloat()
+                    }
+                }
             }
         }
         return Pair(x, y)
@@ -50,17 +71,36 @@ class GameManager {
             Win.DIAGONAL_LEFT -> {
                 x = winCells.last().right.toFloat()
                 y = winCells.last().bottom.toFloat()
+
+                for (cell in winCells) {
+                    if (cell.right.toFloat() > x) {
+                        x = cell.right.toFloat()
+                    }
+
+                    if (cell.bottom.toFloat() > y) {
+                        y = cell.bottom.toFloat()
+                    }
+                }
             }
             Win.DIAGONAL_RIGHT -> {
                 x = winCells.last().left.toFloat()
                 y = winCells.last().bottom.toFloat()
+
+                for (cell in winCells) {
+                    if (cell.left.toFloat() < x) {
+                        x = cell.left.toFloat()
+                    }
+                    if (cell.bottom.toFloat() > y) {
+                        y = cell.bottom.toFloat()
+                    }
+                }
             }
         }
         return Pair(x, y)
     }
 
     fun getDot(cell: Cell, playerX: Boolean): Dot {
-        if (isCellValid(cell)) {
+        if (cell.isEmpty) {
             return when (playerX) {
                 true -> Dot.X
                 else -> Dot.O
@@ -74,16 +114,16 @@ class GameManager {
         val winCells = Array(winLength) { Cell() }
         val isWin = checkColumn(index.first, field, dot, winLength, winCells) ||
                 checkRow(index.second, field, dot, winLength, winCells) ||
-                checkDiagonalFromLeftToRight(field, dot, winLength, winCells) ||
-                checkDiagonalFromRightToLeft(field, dot, winLength, winCells)
+                checkDiagonalsFromLeftToRight(index.first, index.second, field, dot, winLength, winCells) ||
+                checkDiagonalsFromRightToLeft(index.first, index.second, field, dot, winLength, winCells)
         return Pair(isWin, winCells)
     }
 
     fun findAiStep(gameMode: String, field: Array<Array<Cell>>, winLength: Int): Pair<Int, Int> {
         return when (gameMode) {
-            GameMode.PvA_Lazy -> findLazyAiStep(field, winLength)
+            GameMode.PvA_Lazy -> findLazyAiStep(field)
             GameMode.PvA_Hard -> findHardAiStep(field, winLength)
-            else -> findLazyAiStep(field, winLength)
+            else -> findLazyAiStep(field)
         }
     }
 
@@ -98,58 +138,116 @@ class GameManager {
 
     private fun checkColumn(x: Int, field: Array<Array<Cell>>, dot: Dot, winLength: Int,
                             winCells: Array<Cell>): Boolean {
-        for (y in 0 until winLength) {
-            if (field[x][y].dot != dot) return false
+        var count = 0
+        for (y in field.indices) {
+            if (field.size == winLength && field[x][y].dot != dot) return false
+
+            if (field[x][y].dot == dot) {
+                winCells[count] = field[x][y]
+                count++
+                if (count == winLength) break
+            } else {
+                count = 0
+            }
         }
 
-        for (i in 0 until winLength) {
-            winCells[i] = field[x][i]
-        }
         winLine = Win.VERTICAL
-        return true
+        return count == winLength
     }
 
     private fun checkRow(y: Int, field: Array<Array<Cell>>, dot: Dot, winLength: Int,
                          winCells: Array<Cell>): Boolean {
-        for (x in 0 until winLength) {
-            if (field[x][y].dot != dot) return false
-        }
+        var count = 0
+        for (x in field.indices) {
+            if (field.size == winLength && field[x][y].dot != dot) return false
 
-        for (i in 0 until winLength) {
-            winCells[i] = field[i][y]
+            if (field[x][y].dot == dot) {
+                winCells[count] = field[x][y]
+                count++
+                if (count == winLength) break
+            } else {
+                count = 0
+            }
         }
         winLine = Win.HORIZONTAL
-        return true
+        return count == winLength
     }
 
-    private fun checkDiagonalFromLeftToRight(field: Array<Array<Cell>>, dot: Dot, winLength: Int,
-                                             winCells: Array<Cell>): Boolean {
+    //    \ direction, all diagonals
+    private fun checkDiagonalsFromLeftToRight(x: Int, y: Int, field: Array<Array<Cell>>, dot: Dot,
+                                              winLength: Int, winCells: Array<Cell>): Boolean {
+        var count = 0
+
+        // up from click
         for (i in 0 until winLength) {
-            if (field[i][i].dot != dot) return false
-            winCells[i] = field[i][i]
+            if (field.size == winLength && field[i][i].dot != dot) return false
+            if (x - i < 0 || y - i < 0) break
+            if (count == winLength) break
+
+            if (field[x - i][y - i].dot == dot) {
+                winCells[count] = field[x - i][y - i]
+                count++
+            } else {
+                break
+            }
         }
 
+        // down from click
+        for (i in 1 until winLength) {
+            if (x + i >= field.size || y + i >= field.size) break
+            if (count == winLength) break
+
+            if (field[x + i][y + i].dot == dot) {
+                winCells[count] = field[x + i][y + i]
+                count++
+            } else {
+                break
+            }
+        }
         winLine = Win.DIAGONAL_LEFT
-        return true
+        return count == winLength
     }
 
-    private fun checkDiagonalFromRightToLeft(field: Array<Array<Cell>>, dot: Dot, winLength: Int,
-                                             winCells: Array<Cell>): Boolean {
-        var count = 1
+    //   / direction, all diagonals
+    private fun checkDiagonalsFromRightToLeft(x: Int, y: Int, field: Array<Array<Cell>>, dot: Dot,
+                                              winLength: Int, winCells: Array<Cell>): Boolean {
+        var count = 0
+
+        // up from click
         for (i in 0 until winLength) {
-            if (field[winLength - count][i].dot != dot) return false
-            winCells[i] = field[winLength - count][i]
-            count++
+            if (field.size == winLength && field[winLength - (i + 1)][i].dot != dot) return false
+            if (x + i >= field.size || y - i < 0) break
+            if (count == winLength) break
+
+            if (field[x + i][y - i].dot == dot) {
+                winCells[count] = field[x + i][y - i]
+                count++
+            } else {
+                break
+            }
+        }
+
+        // down from click
+        for (i in 1 until winLength) {
+            if (x - i < 0 || y + i >= field.size) break
+            if (count == winLength) break
+
+            if (field[x - i][y + i].dot == dot) {
+                winCells[count] = field[x - i][y + i]
+                count++
+            } else {
+                break
+            }
         }
         winLine = Win.DIAGONAL_RIGHT
-        return true
+        return count == winLength
     }
 
     private fun findHardAiStep(field: Array<Array<Cell>>, winLength: Int): Pair<Int, Int> {
         // если поставить 0 == выигрыш
         for ((x, cells) in field.withIndex()) {
             for ((y, cell) in cells.withIndex()) {
-                if (isCellValid(cell)) {
+                if (cell.isEmpty) {
                     cell.dot = Dot.O
                     if (isWin(Pair(x, y), field, cell.dot, winLength).first) {
                         cell.dot = Dot.EMPTY
@@ -164,7 +262,7 @@ class GameManager {
         // если игрок поставит Х и выиграет
         for ((x, cells) in field.withIndex()) {
             for ((y, cell) in cells.withIndex()) {
-                if (isCellValid(cell)) {
+                if (cell.isEmpty) {
                     cell.dot = Dot.X
                     if (isWin(Pair(x, y), field, cell.dot, winLength).first) {
                         cell.dot = Dot.EMPTY
@@ -177,23 +275,19 @@ class GameManager {
         }
 
         // рандом
-        return findLazyAiStep(field, winLength)
+        return findLazyAiStep(field)
     }
 
-    private fun findLazyAiStep(field: Array<Array<Cell>>, winLength: Int): Pair<Int, Int> {
+    private fun findLazyAiStep(field: Array<Array<Cell>>): Pair<Int, Int> {
         val random = Random()
         var x: Int
         var y: Int
 
         do {
-            x = random.nextInt(winLength)
-            y = random.nextInt(winLength)
-        } while (!isCellValid(field[x][y]))
+            x = random.nextInt(field.size)
+            y = random.nextInt(field.size)
+        } while (!field[x][y].isEmpty)
 
         return Pair(x, y)
-    }
-
-    private fun isCellValid(cell: Cell): Boolean {
-        return cell.dot == Dot.EMPTY
     }
 }

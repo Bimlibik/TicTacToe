@@ -8,6 +8,7 @@ import android.view.MotionEvent
 import android.view.View
 import com.foxy.tictactoe.data.Cell
 import com.foxy.tictactoe.utils.FieldCallback
+import com.foxy.tictactoe.utils.enums.Dot
 import kotlin.math.min
 
 class FieldView : View {
@@ -107,15 +108,34 @@ class FieldView : View {
 
     private fun checkCellStates(canvas: Canvas) {
         for (cell in dotInfo) {
-            drawDot(canvas, cell)
+            when(cell.dot) {
+                Dot.X -> drawDotX(canvas, cell)
+                Dot.O -> drawDotO(canvas, cell)
+                Dot.EMPTY -> return
+            }
         }
     }
 
-    private fun drawDot(canvas: Canvas, cell: Cell) {
+    private fun drawDotX(canvas: Canvas, cell: Cell) {
         val margin = (width / cellCount) / 4
-        val startX = (cell.left + margin).toFloat()
-        val startY = (cell.bottom - margin).toFloat()
-        canvas.drawText(cell.dot.toString(), startX, startY, dotPaint)
+        val leftX = (cell.left + margin).toFloat()
+        val bottomY = (cell.bottom - margin).toFloat()
+        val rightX = (cell.right - margin).toFloat()
+        val topY = (cell.top + margin).toFloat()
+
+        canvas.drawLine(leftX, bottomY, rightX, topY, dotPaint)
+        canvas.drawLine(leftX, topY, rightX, bottomY, dotPaint)
+    }
+
+    private fun drawDotO(canvas: Canvas, cell: Cell) {
+        val marginHorizontal = (width / cellCount) / 4
+        val marginVertical = (width / cellCount) / 5
+        val left = (cell.left + marginHorizontal).toFloat()
+        val bottom = (cell.bottom - marginVertical).toFloat()
+        val right = (cell.right - marginHorizontal).toFloat()
+        val top = (cell.top + marginVertical).toFloat()
+
+        canvas.drawOval(left, top, right, bottom, dotPaint)
     }
 
     private fun drawVerticalLines(canvas: Canvas) {
@@ -135,25 +155,26 @@ class FieldView : View {
     }
 
     private fun initPaint() {
+        val lineSize = (width / cellCount) / 50
         linePaint.apply {
             color = Color.BLACK
             isAntiAlias = true
             style = Paint.Style.STROKE
-            strokeWidth = resources.displayMetrics.density * 5
+            strokeWidth = resources.displayMetrics.density * lineSize
         }
 
         dotPaint.apply {
             color = Color.BLACK
             isAntiAlias = true
-            val margin = (width / cellCount) / 4
-            textSize = resources.displayMetrics.scaledDensity * margin
+            style = Paint.Style.STROKE
+            strokeWidth = resources.displayMetrics.density * lineSize
         }
 
         animatePaint.apply {
             color = Color.RED
             isAntiAlias = true
             style = Paint.Style.STROKE
-            strokeWidth = resources.displayMetrics.density * 5
+            strokeWidth = resources.displayMetrics.density * lineSize
         }
     }
 }

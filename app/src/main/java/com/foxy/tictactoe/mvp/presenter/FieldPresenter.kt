@@ -5,6 +5,9 @@ import com.foxy.tictactoe.data.GameRepository
 import com.foxy.tictactoe.di.Scopes
 import com.foxy.tictactoe.mvp.view.FieldView
 import com.foxy.tictactoe.utils.*
+import com.foxy.tictactoe.utils.enums.Dot
+import com.foxy.tictactoe.utils.enums.Step
+import com.foxy.tictactoe.utils.enums.GameMode
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import toothpick.Toothpick
@@ -21,8 +24,10 @@ class FieldPresenter : MvpPresenter<FieldView>() {
     private lateinit var field: Array<Array<Cell>>
 
     private var gameMode = ""
+    private var step = ""
     private var size = 0
     private var cellCount = 3
+    private var winLength = 3
     private var playerX = true
     private var hasWin = false
     private var currentCellIndex = Pair(0, 0)
@@ -35,17 +40,18 @@ class FieldPresenter : MvpPresenter<FieldView>() {
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        cellCount = repository.getFieldSize()
-        gameMode = repository.getGameMode()
-        field = Array(cellCount) { Array(cellCount) { Cell() } }
+        initGameSettings()
+        if (step == Step.AI) makeStep()
     }
 
     fun reset() {
         field = Array(cellCount) { Array(cellCount) { Cell() } }
+        step = repository.getFirstStep()
         playerX = true
         hasWin = false
         initField()
         viewState.replay()
+        if (step == Step.AI) makeStep()
     }
 
     fun checkFinalCellIndex(x: Int, y: Int) {
@@ -68,16 +74,13 @@ class FieldPresenter : MvpPresenter<FieldView>() {
         initField()
     }
 
-    private fun makeStep(index: Pair<Int, Int>) {
-        val cell = field[index.first][index.second]
-        val dot = gameManager.getDot(cell, playerX)
-        if (dot == Dot.EMPTY) return
-
+    private fun makeStep(index: Pair<Int, Int> = Pair(0, 0)) {
         when (gameMode) {
             GameMode.PvP -> checkPlayerStep(index)
             GameMode.PvA_Lazy, GameMode.PvA_Hard -> {
-                if (playerX) {
+                if (step == Step.PLAYER) {
                     checkPlayerStep(index)
+                } else {
                     checkAiStep()
                 }
             }
@@ -88,14 +91,22 @@ class FieldPresenter : MvpPresenter<FieldView>() {
         if (hasWin) return
         if (gameManager.isFieldFull(field)) return
 
-        val index = gameManager.findAiStep(gameMode, field, cellCount)
+        val index = gameManager.findAiStep(gameMode, field, winLength)
         if (index.first < 0 || index.second < 0) return
 
         changeDotInCell(index)
+        step = Step.PLAYER
     }
 
     private fun checkPlayerStep(index: Pair<Int, Int>) {
+        val cell = field[index.first][index.second]
+        if (!cell.isEmpty) return
         changeDotInCell(index)
+
+        if (isPvE()) {
+            step = Step.AI
+            makeStep()
+        }
     }
 
     private fun changeDotInCell(index: Pair<Int, Int>) {
@@ -109,11 +120,11 @@ class FieldPresenter : MvpPresenter<FieldView>() {
     }
 
     private fun checkWin(index: Pair<Int, Int>, dot: Dot) {
-        val winInfo = gameManager.isWin(index, field, dot, cellCount)
+        val winInfo = gameManager.isWin(index, field, dot, winLength)
         if (winInfo.first) {
             hasWin = winInfo.first
             calculateCoordinatesForAnimation(winInfo.second)
-            saveStatistics()
+            saveStatistics(dot)
             return
         }
 
@@ -131,8 +142,10 @@ class FieldPresenter : MvpPresenter<FieldView>() {
         viewState.showWinner(start.first, start.second, end.first, end.second, winCells.first().dot)
     }
 
-    private fun saveStatistics() {
-        repository.saveStatistics(gameMode, playerX)
+    private fun saveStatistics(dot: Dot) {
+        val winPlayer = (repository.getFirstStep() == Step.PLAYER && dot == Dot.X) ||
+                (repository.getFirstStep() == Step.AI && dot == Dot.O)
+        repository.saveStatistics(gameMode, playerX, winPlayer)
     }
 
     private fun getFieldWithDot(): MutableList<Cell> {
@@ -156,6 +169,18 @@ class FieldPresenter : MvpPresenter<FieldView>() {
             }
         }
         return Pair(-1, -1)
+    }
+
+    private fun isPvE(): Boolean {
+        return gameMode == GameMode.PvA_Lazy || gameMode == GameMode.PvA_Hard
+    }
+
+    private fun initGameSettings() {
+        cellCount = repository.getFieldSize()
+        winLength = repository.getWinLineLength()
+        gameMode = repository.getGameMode()
+        step = repository.getFirstStep()
+        field = Array(cellCount) { Array(cellCount) { Cell() } }
     }
 
     private fun initField() {

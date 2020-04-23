@@ -13,10 +13,10 @@
         android:padding="16dp"
         android:visibility="gone">
         <ImageButton
-            android:id="@+id/btn_exit"
+            android:id="@+id/btn_return"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/ic_exit"
+            android:background="@drawable/ic_return"
             android:contentDescription="@string/content_description_exit"/>
         <View
             android:layout_width="0dp"

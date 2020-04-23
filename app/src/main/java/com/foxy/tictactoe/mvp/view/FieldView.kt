@@ -1,7 +1,7 @@
 package com.foxy.tictactoe.mvp.view
 
 import com.foxy.tictactoe.data.Cell
-import com.foxy.tictactoe.utils.Dot
+import com.foxy.tictactoe.utils.enums.Dot
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.StateStrategyType

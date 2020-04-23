@@ -1,35 +1,56 @@
 package com.foxy.tictactoe.data
 
 import com.foxy.tictactoe.utils.*
+import com.foxy.tictactoe.utils.enums.GameMode
 import toothpick.InjectConstructor
 
 @InjectConstructor
 class  PrefsGameRepository : GameRepository {
 
     override fun getGameMode(): String {
-        return getPrefsGameMode()
+        return getGameModeFromPrefs()
+    }
+
+    override fun getFirstStep(): String {
+        return getFirstStepFromPrefs()
+    }
+
+    override fun saveFirstStep(firstStep: String) {
+        saveFirstStepToPrefs(firstStep)
     }
 
     override fun getFieldSize(): Int {
-        return getPrefsFieldSize()
+        return getFieldSizeFromPrefs()
+    }
+
+    override fun getWinLineLength(): Int {
+        return getsWinLineLengthFromPrefs()
+    }
+
+    override fun saveWinLineLength(winLength: Int) {
+        saveWinLineLengthToPrefs(winLength)
     }
 
     override fun getStatistics(gameMode: String): Pair<Int, Int> {
         var statistics = Pair(0, 0)
         when(gameMode) {
-            GameMode.PvP -> statistics = getPvPStatistics()
-            GameMode.PvA_Lazy -> statistics = getPvALazyStatistics()
-            GameMode.PvA_Hard -> statistics = getPvAHardStatistics()
+            GameMode.PvP -> statistics = getPvPStatisticsFromPrefs()
+            GameMode.PvA_Lazy -> statistics = getPvALazyStatisticsFromPrefs()
+            GameMode.PvA_Hard -> statistics = getPvAHardStatisticsFromPrefs()
         }
         return statistics
     }
 
-    override fun saveStatistics(gameMode: String, playerX: Boolean) {
+    override fun saveStatistics(gameMode: String, playerX: Boolean, winPlayer: Boolean) {
         when(gameMode) {
-            GameMode.PvP -> savePvPStatistics(playerX)
-            GameMode.PvA_Lazy -> savePvALazyStatistics(playerX)
-            GameMode.PvA_Hard -> savePvAHardStatistics(playerX)
+            GameMode.PvP -> savePvPStatisticsToPrefs(playerX)
+            GameMode.PvA_Lazy -> savePvALazyStatisticsToPrefs(winPlayer)
+            GameMode.PvA_Hard -> savePvAHardStatisticsToPrefs(winPlayer)
         }
+    }
+
+    override fun clearStatistics() {
+        deleteStatisticsFromPrefs()
     }
 
 }

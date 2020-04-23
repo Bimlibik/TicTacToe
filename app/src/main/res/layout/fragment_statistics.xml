@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/backgroundLight">
 
     <TextView
         android:layout_width="wrap_content"
@@ -10,7 +11,8 @@
         android:text="@string/tv_title_pvp"
         android:textColor="@color/textColorDark"
         android:textSize="24sp"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"/>
 
     <GridLayout
         android:layout_width="wrap_content"
@@ -69,7 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:text="@string/tv_player_x"
+            android:text="@string/tv_player"
             android:textSize="18sp"
             android:textColor="@color/textColorDark" />
 
@@ -83,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:text="@string/tv_player_0"
+            android:text="@string/tv_ai"
             android:textSize="18sp"
             android:textColor="@color/textColorDark" />
 
@@ -115,7 +117,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:text="@string/tv_player_x"
+            android:text="@string/tv_player"
             android:textSize="18sp"
             android:textColor="@color/textColorDark" />
 
@@ -129,7 +131,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:text="@string/tv_player_0"
+            android:text="@string/tv_ai"
             android:textSize="18sp"
             android:textColor="@color/textColorDark" />
 
@@ -140,4 +142,19 @@
             android:textSize="18sp"
             android:textColor="@color/textColorDark" />
     </GridLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/btn_reset"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp"
+        android:text="Reset statistics"
+        android:background="@drawable/border" />
+
 </LinearLayout>
